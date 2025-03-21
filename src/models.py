@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import Utils, RawData
+import preprocessing as prepro
+from utils import RawData
 
 class LinealReg:
     def __init__(self, x : np.ndarray, y : np.ndarray, initial_weight_value : float = 1):
@@ -21,11 +22,12 @@ class LinealReg:
                 break
             # print("(step_size * (gradient / np.linalg.norm(gradient)): ", (step_size * (gradient / np.linalg.norm(gradient))))
             # print("(gradient / np.linalg.norm(gradient): ", (gradient / np.linalg.norm(gradient), "\n"))
-            # print(self.error_cuadratico_medio())
-            self.coef = self.coef - (step_size * (gradient / np.linalg.norm(gradient)))
+            print(self.error_cuadratico_medio())
+            # self.coef = self.coef - (step_size * (gradient / np.linalg.norm(gradient)))
+            self.coef = self.coef - (step_size * (gradient))
             attempts += 1
 
-    def least_squares_function(self) -> float:
+    def error_least_squares_function(self) -> float:
         # ||Xw - Y||^2
         return np.linalg.norm((self.x @ self.coef) - self.y)**2
 
@@ -40,17 +42,13 @@ class LinealReg:
         # 2X^T * (Xw - Y)
         return (2 * self.x.T) @ ((self.x @ self.coef) - self.y)
 
-casas_dev : pd.DataFrame = Utils.correct_data_types(RawData.casas_dev)
-casas_dev = Utils.convert_area_units(casas_dev, 'm2')
+casas_dev : pd.DataFrame = prepro.correct_data_types(RawData.casas_dev)
+casas_dev = prepro.convert_area_units(casas_dev, 'm2')
 
 lin : LinealReg = LinealReg(casas_dev[casas_dev['lat'] > 0]['price'].to_numpy(), casas_dev[casas_dev['lat'] > 0]['area'].to_numpy())
-lin.fit_pseudo_inverse()
+# lin.fit_pseudo_inverse()
 # lin.fit_gradient_descent(step_size=0.00005, tolerance=10000, max_number_of_steps=-1)
-print(lin.error_cuadratico_medio())
-# print(lin.coef)
-# print(np.linalg.norm(lin.least_squares_gradient()))
-
-
+lin.fit_gradient_descent(step_size=0.0000000005, tolerance=5000, max_number_of_steps=-1)
 
 plt.scatter(casas_dev['price'], casas_dev['area'], edgecolors='lightcyan')
 plt.scatter(casas_dev[casas_dev['lat'] > 0]['price'], casas_dev[casas_dev['lat'] > 0]['area'], edgecolors='lightcyan')
