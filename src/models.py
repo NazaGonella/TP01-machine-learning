@@ -1,13 +1,14 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import preprocessing as prepro
-from utils import RawData
+import src.preprocessing as prepro
+# from utils import RawData
 
 class LinealReg:
     def __init__(self, x : np.ndarray, y : np.ndarray, initial_weight_value : float = 1):
-        self.x : np.ndarray = np.c_[np.ones(x.shape[0]), x]     # agrego columna de unos para el bias.
-        self.y : np.ndarray = y
+        self.x : np.ndarray = np.array(np.c_[np.ones(x.shape[0]), x], dtype=np.float64)   # agrego columna de unos para el bias.
+        # self.x : np.ndarray = x
+        self.y : np.ndarray = np.array(y, dtype=np.float64)
         self.coef : np.ndarray = np.full(shape=self.x.shape[1], fill_value=initial_weight_value)
     
     def fit_pseudo_inverse(self):
@@ -22,7 +23,7 @@ class LinealReg:
                 break
             # print("(step_size * (gradient / np.linalg.norm(gradient)): ", (step_size * (gradient / np.linalg.norm(gradient))))
             # print("(gradient / np.linalg.norm(gradient): ", (gradient / np.linalg.norm(gradient), "\n"))
-            print(self.error_cuadratico_medio())
+            # print(self.error_cuadratico_medio())
             # self.coef = self.coef - (step_size * (gradient / np.linalg.norm(gradient)))
             self.coef = self.coef - (step_size * (gradient))
             attempts += 1
@@ -42,31 +43,34 @@ class LinealReg:
         # 2X^T * (Xw - Y)
         return (2 * self.x.T) @ ((self.x @ self.coef) - self.y)
 
-casas_dev : pd.DataFrame = prepro.correct_data_types(RawData.casas_dev)
-casas_dev = prepro.convert_area_units(casas_dev, 'm2')
+    def predict(self, input : np.ndarray) -> np.ndarray:
+        return self.coef @ input
 
-lin : LinealReg = LinealReg(casas_dev[casas_dev['lat'] > 0]['price'].to_numpy(), casas_dev[casas_dev['lat'] > 0]['area'].to_numpy())
-# lin.fit_pseudo_inverse()
-# lin.fit_gradient_descent(step_size=0.00005, tolerance=10000, max_number_of_steps=-1)
-lin.fit_gradient_descent(step_size=0.0000000005, tolerance=5000, max_number_of_steps=-1)
+# casas_dev : pd.DataFrame = prepro.correct_data_types(RawData.casas_dev)
+# casas_dev = prepro.convert_area_units(casas_dev, 'm2')
 
-plt.scatter(casas_dev['price'], casas_dev['area'], edgecolors='lightcyan')
-plt.scatter(casas_dev[casas_dev['lat'] > 0]['price'], casas_dev[casas_dev['lat'] > 0]['area'], edgecolors='lightcyan')
-plt.xlabel('price')
-plt.ylabel('area')
+# lin : LinealReg = LinealReg(casas_dev[casas_dev['lat'] < 0]['area'].to_numpy(), casas_dev[casas_dev['lat'] < 0]['price'].to_numpy())
+# # lin.fit_pseudo_inverse()
+# # lin.fit_gradient_descent(step_size=0.00005, tolerance=10000, max_number_of_steps=-1)
+# lin.fit_gradient_descent(step_size=0.0000000005, tolerance=5000, max_number_of_steps=-1)
 
-a = np.arange(2000, step=10)
-b = [lin.coef[0] + (lin.coef[1] * x) for x in a]
-plt.plot(a, b)
+# plt.scatter(casas_dev['area'], casas_dev['price'], edgecolors='lightcyan')
+# plt.scatter(casas_dev[casas_dev['lat'] < 0]['area'], casas_dev[casas_dev['lat'] < 0]['price'], edgecolors='lightcyan')
+# plt.xlabel('area')
+# plt.ylabel('price')
 
-plt.show()
+# a = np.arange(300, step=10)
+# b = [lin.coef[0] + (lin.coef[1] * x) for x in a]
+# plt.plot(a, b)
 
-# a = np.array([[1, 3], 
-#               [3, 4], 
-#               [1, 4]])
-# b = np.array([1, 2])
+# plt.show()
+
+# # a = np.array([[1, 3], 
+# #               [3, 4], 
+# #               [1, 4]])
+# # b = np.array([1, 2])
 
 
-# print(a @ b)
-# print(a.shape)
-# print(b.shape)
+# # print(a @ b)
+# # print(a.shape)
+# # print(b.shape)

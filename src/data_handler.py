@@ -9,6 +9,12 @@ def get_train_and_validation_sets(df : pd.DataFrame, train_fraction : float = 0.
 def get_null_rows(df : pd.DataFrame) -> int:
     return df.isna().T.any().sum()
 
+def are_data_types_uniform(df : pd.DataFrame) -> bool:
+    for col in df.columns.to_list():
+        if df['price'].map(type).nunique() != 1:
+            return False
+    return True
+
 class RawData:
     def __init__(self):
         self.casas_dev : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/casas_dev.csv')
@@ -16,10 +22,14 @@ class RawData:
         self.vivienda_amanda : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/vivienda_amanda.csv')
 
 class ProcessedData:
-    def __init__(self, correct_data_types : bool = True, normalize : bool = True, area_units : str = 'm2'):
+    def __init__(self, correct_data_types : bool = True, normalize : bool = True, area_units : str = 'm2', remove_na_rows : bool = False):
         self.casas_dev : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/casas_dev.csv')
         self.casas_test : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/casas_test.csv')
         self.vivienda_amanda : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/vivienda_amanda.csv')
+        if remove_na_rows:
+            self.casas_dev : pd.DataFrame = prepro.remove_na_rows(self.casas_dev)
+            self.casas_test : pd.DataFrame = prepro.remove_na_rows(self.casas_test)
+            self.vivienda_amanda : pd.DataFrame = prepro.remove_na_rows(self.vivienda_amanda)
         if correct_data_types:
             self.casas_dev : pd.DataFrame = prepro.correct_data_types(self.casas_dev)
             self.casas_test : pd.DataFrame = prepro.correct_data_types(self.casas_test)
@@ -33,7 +43,7 @@ class ProcessedData:
             self.casas_test = prepro.normalize_numeric_columns(self.casas_test)
             self.vivienda_amanda = prepro.normalize_numeric_columns(self.vivienda_amanda, excluded_columns={'price'})
     
-    def save_data_to(self, path : str = 'data/processed'):
+    def save_data(self, path : str = 'data/processed'):
         self.casas_dev.to_csv(f'{path}/casas_dev_processed.csv')
         self.casas_test.to_csv(f'{path}/casas_test_processed.csv')
         self.vivienda_amanda.to_csv(f'{path}/vivienda_amanda_processed.csv')
