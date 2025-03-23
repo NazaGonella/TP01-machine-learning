@@ -39,8 +39,8 @@ class ProcessedData:
             self.casas_test = prepro.convert_area_units(self.casas_test, area_units)
             self.vivienda_amanda = prepro.convert_area_units(self.vivienda_amanda, area_units)
         if normalize:
-            self.casas_dev = prepro.normalize_numeric_columns(self.casas_dev, excluded_columns={'price'})
-            self.casas_test = prepro.normalize_numeric_columns(self.casas_test, excluded_columns={'price'})
+            self.casas_dev = prepro.normalize_numeric_columns(self.casas_dev)
+            self.casas_test = prepro.normalize_numeric_columns(self.casas_test)
             self.vivienda_amanda = prepro.normalize_numeric_columns(self.vivienda_amanda, excluded_columns={'price'})
     
     def save_data(self, path : str = 'data/processed'):
