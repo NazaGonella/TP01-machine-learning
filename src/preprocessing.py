@@ -26,7 +26,7 @@ def convert_area_units(df : pd.DataFrame, area_unit : str = 'm2') -> pd.DataFram
             _df = _df.replace('m2', 'sqft')
     return _df
 
-def normalize_numeric_columns(df : pd.DataFrame, excluded_columns : set[str] = set()) -> pd.DataFrame:
+def standarize_numeric_columns(df : pd.DataFrame, excluded_columns : set[str] = set()) -> pd.DataFrame:
     numeric_columns : list[str] = ['area', 'age', 'price', 'lat', 'lon', 'rooms']
     _df : pd.DataFrame = df.copy()
     for col in numeric_columns:
