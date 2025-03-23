@@ -32,7 +32,6 @@ def normalize_numeric_columns(df : pd.DataFrame, excluded_columns : set[str] = s
     for col in numeric_columns:
         #print(_df)
         if col in excluded_columns:
-            print("BIEN")
             continue
         # print(col, "| ", f"mean: {_df[col].mean()} - std: {_df[col].std()}")
         _df[col] = ((_df[col] - _df[col].mean()) / _df[col].std())
