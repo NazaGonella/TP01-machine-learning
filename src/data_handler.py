@@ -43,7 +43,7 @@ class ProcessedData:
             self.casas_test = prepro.normalize_numeric_columns(self.casas_test)
             self.vivienda_amanda = prepro.normalize_numeric_columns(self.vivienda_amanda, excluded_columns={'price'})
     
-    def save_data(self, path : str = 'data/processed'):
-        self.casas_dev.to_csv(f'{path}/casas_dev_processed.csv')
-        self.casas_test.to_csv(f'{path}/casas_test_processed.csv')
-        self.vivienda_amanda.to_csv(f'{path}/vivienda_amanda_processed.csv')
+    def save_data(self, path : str = 'data/processed', ext : str = ''):
+        self.casas_dev.to_csv(f'{path}/casas_dev_processed{'_' + ext if ext else ''}.csv')
+        self.casas_test.to_csv(f'{path}/casas_test_processed{'_' + ext if ext else ''}.csv')
+        self.vivienda_amanda.to_csv(f'{path}/vivienda_amanda_processed{'_' + ext if ext else ''}.csv')
