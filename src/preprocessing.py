@@ -29,7 +29,8 @@ def convert_area_units(df : pd.DataFrame, area_unit : str = 'm2') -> pd.DataFram
 def standarize_numeric_columns(df : pd.DataFrame, excluded_columns : set[str] = set()) -> pd.DataFrame:
     numeric_columns : list[str] = ['area', 'age', 'price', 'lat', 'lon', 'rooms']
     _df : pd.DataFrame = df.copy()
-    for col in numeric_columns:
+    # for col in numeric_columns:
+    for col in _df.columns:
         #print(_df)
         if col in excluded_columns:
             continue

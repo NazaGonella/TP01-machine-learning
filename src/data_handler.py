@@ -33,7 +33,7 @@ class ProcessedData:
         if area_units == 'm2' or area_units == 'sqft':
             self.casas_dev = prepro.convert_area_units(self.casas_dev, area_units)
         if standarize:
-            self.casas_dev = prepro.standarize_numeric_columns(self.casas_dev)
+            self.casas_dev = prepro.standarize_numeric_columns(self.casas_dev, excluded_columns=['is_house', 'has_pool', 'area_units', 'high_latitude'])
     
     def fill_missing_values(self, method : str = 'median') -> None:
         match method:

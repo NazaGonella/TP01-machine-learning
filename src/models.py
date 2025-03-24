@@ -25,6 +25,7 @@ class LinealReg:
 
     def fit_gradient_descent(self, step_size : float, tolerance : float = -1, max_number_of_steps : int = -1):
         attempts = 0
+        # print(self.x.shape)
         while True:
             gradient = self.least_squares_gradient()
             if (np.linalg.norm(gradient) <= tolerance and tolerance != -1) or (attempts >= max_number_of_steps and max_number_of_steps != -1):
@@ -34,21 +35,28 @@ class LinealReg:
             # print(self.error_cuadratico_medio())
             self.coef = self.coef - (step_size * (gradient))
             attempts += 1
-        # print(self.error_cuadratico_medio())
+            # print(self.error_cuadratico_medio())
 
     def error_least_squares_function(self) -> float:
         # ||Xw - Y||^2
         return np.linalg.norm((self.x @ self.coef) - self.y)**2
 
-    def error_cuadratico_medio(self, validation_set : np.ndarray = np.array([])) -> float:
-        val_set : np.ndarray = self.y
-        if val_set.shape == validation_set.shape:
-            val_set = validation_set
+    def error_cuadratico_medio(self, validation_set_y : np.ndarray = None, validation_set_x : np.ndarray = None) -> float:
+        print(self.x.shape)
+        print(self.y.shape)
+        val_set_y : np.ndarray = self.y
+        val_set_x : np.ndarray = self.x
+        if validation_set_y is not None and validation_set_x is not None:
+            # print("HOLA")
+            val_set_y = validation_set_y
+            val_set_x = validation_set_x
+        # print(self.x.shape)
+        # print(self.coef.shape)
         sum : float = 0
-        result = (val_set - (self.x @ self.coef))**2
-        for i in range(self.y.shape[0]):
+        result = (val_set_y - (val_set_x @ self.coef))**2
+        for i in range(val_set_y.shape[0]):
             sum += result[i]
-        return sum / val_set.shape[0]
+        return sum / val_set_y.shape[0]
     
     def least_squares_gradient(self) -> np.ndarray:
         # 2X^T * (Xw - Y)
