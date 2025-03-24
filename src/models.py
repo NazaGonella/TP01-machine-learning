@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import src.preprocessing as prepro
+# import preprocessing as prepro
+# import data_handler
 # from utils import RawData
 
 class LinealReg:
@@ -23,7 +25,7 @@ class LinealReg:
                 break
             # print("(step_size * (gradient / np.linalg.norm(gradient)): ", (step_size * (gradient / np.linalg.norm(gradient))))
             # print("(gradient / np.linalg.norm(gradient): ", (gradient / np.linalg.norm(gradient), "\n"))
-            # print(self.error_cuadratico_medio())
+            print(self.error_cuadratico_medio())
             # self.coef = self.coef - (step_size * (gradient / np.linalg.norm(gradient)))
             self.coef = self.coef - (step_size * (gradient))
             attempts += 1
@@ -46,20 +48,22 @@ class LinealReg:
     def predict(self, input : np.ndarray) -> np.ndarray:
         return self.coef @ input
 
-# casas_dev : pd.DataFrame = prepro.correct_data_types(RawData.casas_dev)
+# casas_dev : pd.DataFrame = prepro.correct_data_types(data_handler.RawData().casas_dev)
 # casas_dev = prepro.convert_area_units(casas_dev, 'm2')
+# casas_dev = prepro.remove_na_rows(casas_dev)
+# casas_dev = prepro.standarize_numeric_columns(casas_dev)
 
 # lin : LinealReg = LinealReg(casas_dev[casas_dev['lat'] < 0]['area'].to_numpy(), casas_dev[casas_dev['lat'] < 0]['price'].to_numpy())
 # # lin.fit_pseudo_inverse()
 # # lin.fit_gradient_descent(step_size=0.00005, tolerance=10000, max_number_of_steps=-1)
-# lin.fit_gradient_descent(step_size=0.0000000005, tolerance=5000, max_number_of_steps=-1)
+# lin.fit_gradient_descent(step_size=0.0005, tolerance=1, max_number_of_steps=-1)
 
 # plt.scatter(casas_dev['area'], casas_dev['price'], edgecolors='lightcyan')
 # plt.scatter(casas_dev[casas_dev['lat'] < 0]['area'], casas_dev[casas_dev['lat'] < 0]['price'], edgecolors='lightcyan')
 # plt.xlabel('area')
 # plt.ylabel('price')
 
-# a = np.arange(300, step=10)
+# a = np.arange(-2, 5, step=0.1)
 # b = [lin.coef[0] + (lin.coef[1] * x) for x in a]
 # plt.plot(a, b)
 

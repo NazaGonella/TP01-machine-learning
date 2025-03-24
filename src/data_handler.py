@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np
 import src.preprocessing as prepro
+import preprocessing as prepro
 
 def get_train_and_validation_sets(df : pd.DataFrame, train_fraction : float = 0.8, seed : int = 42) -> tuple[pd.DataFrame, pd.DataFrame]:
     train : pd.DataFrame = df.sample(frac=train_fraction,random_state=seed)
@@ -32,6 +34,15 @@ class ProcessedData:
             self.casas_dev = prepro.convert_area_units(self.casas_dev, area_units)
         if standarize:
             self.casas_dev = prepro.standarize_numeric_columns(self.casas_dev)
+    
+    def fill_missing_values(self, method : str = 'median') -> None:
+        match method:
+            case 'median':
+                self.casas_dev['age'] = self.casas_dev['age'].fillna(value=self.casas_dev['age'].median())
+                self.casas_dev['rooms'] = self.casas_dev['rooms'].fillna(value=self.casas_dev['rooms'].median())
+            case 'mean':
+                self.casas_dev['age'] = self.casas_dev['age'].fillna(value=int(round(self.casas_dev['age'].mean())))
+                self.casas_dev['rooms'] = self.casas_dev['rooms'].fillna(value=int(round(self.casas_dev['rooms'].mean())))
     
     def save_data(self, path : str = 'data/processed', ext : str = ''):
         self.casas_dev.to_csv(f'{path}/casas_dev_processed{'_' + ext if ext else ''}.csv')
