@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-# import src.preprocessing as prepro
-import preprocessing as prepro
+import src.preprocessing as prepro
+# import preprocessing as prepro
 
 def get_train_and_validation_sets(df : pd.DataFrame, train_fraction : float = 0.8, seed : int = 42) -> tuple[pd.DataFrame, pd.DataFrame]:
     train : pd.DataFrame = df.sample(frac=train_fraction,random_state=seed)
