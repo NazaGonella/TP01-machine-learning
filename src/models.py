@@ -40,10 +40,10 @@ class LinealReg:
         # ||Xw - Y||^2
         return np.linalg.norm((self.x @ self.coef) - self.y)**2
 
-    def error_cuadratico_medio(self) -> float:
+    def error_cuadratico_medio(self, validation_set : np.ndarray = np.array([])) -> float:
         val_set : np.ndarray = self.y
-        # if validation_set:
-        #     val_set = self.y
+        if val_set.shape == validation_set.shape:
+            val_set = validation_set
         sum : float = 0
         result = (val_set - (self.x @ self.coef))**2
         for i in range(self.y.shape[0]):
