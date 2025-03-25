@@ -1,7 +1,11 @@
 import pandas as pd
 import numpy as np
+import os
 import src.preprocessing as prepro
 # import preprocessing as prepro
+
+project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
+# print(project_root) 
 
 def get_train_and_validation_sets(df : pd.DataFrame, train_fraction : float = 0.8, seed : int = 42) -> tuple[pd.DataFrame, pd.DataFrame]:
     train : pd.DataFrame = df.sample(frac=train_fraction,random_state=seed)
@@ -19,9 +23,9 @@ def are_data_types_uniform(df : pd.DataFrame) -> bool:
 
 class RawData:
     def __init__(self):
-        self.casas_dev : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/casas_dev.csv')
-        self.casas_test : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/casas_test.csv')
-        self.vivienda_amanda : pd.DataFrame = pd.read_csv('/home/nazar/UDESA/5toCUATRIMESTRE/ML/TPs/TP01/data/raw/vivienda_amanda.csv')
+        self.casas_dev : pd.DataFrame = pd.read_csv(f'{project_root}/TP01/data/raw/casas_dev.csv')
+        self.casas_test : pd.DataFrame = pd.read_csv(f'{project_root}/TP01/data/raw/casas_test.csv')
+        self.vivienda_amanda : pd.DataFrame = pd.read_csv(f'{project_root}/TP01/data/raw/vivienda_amanda.csv')
 
 class ProcessedData:
     def __init__(self, correct_data_types : bool = True, standarize : bool = True, area_units : str = 'm2', remove_na_rows : bool = False):
