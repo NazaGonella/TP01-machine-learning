@@ -42,14 +42,14 @@ class LinealReg:
         return np.linalg.norm((self.x @ self.coef) - self.y)**2
 
     def error_cuadratico_medio(self, validation_set_y : np.ndarray = None, validation_set_x : np.ndarray = None) -> float:
-        print(self.x.shape)
-        print(self.y.shape)
         val_set_y : np.ndarray = self.y
         val_set_x : np.ndarray = self.x
         if validation_set_y is not None and validation_set_x is not None:
             # print("HOLA")
             val_set_y = validation_set_y
-            val_set_x = validation_set_x
+            val_set_x = np.array(np.c_[np.ones(validation_set_x.shape[0]), validation_set_x], dtype=np.float64)
+        # print(val_set_x.shape)
+        # print(val_set_y.shape)
         # print(self.x.shape)
         # print(self.coef.shape)
         sum : float = 0
